@@ -13,19 +13,12 @@ declare(strict_types=1);
 
 namespace Doyo\Menu\Contracts;
 
-interface MetaInterface
+interface MenuFactory
 {
-    public function setName(string $name): void;
-
-    public function getName(): string;
-
     /**
-     * @param mixed|string|bool|int $value
+     * @param array<array-key,array<array-key,string>> $definitions
+     *
+     * @return MenuItemInterface[]
      */
-    public function setValue($value): void;
-
-    /**
-     * @return mixed|string|bool|int
-     */
-    public function getValue();
+    public function generateMenus(array $definitions): array;
 }

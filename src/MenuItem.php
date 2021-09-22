@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Doyo\Menu;
 
 use Doyo\Menu\Contracts\MenuItemInterface;
-use Doyo\Menu\Contracts\MetaInterface;
 
 class MenuItem implements MenuItemInterface
 {
@@ -27,19 +26,24 @@ class MenuItem implements MenuItemInterface
     private ?string $icon;
 
     /**
-     * @var array<array-key,MetaInterface>
+     * @var array<array-key,scalar>
      */
-    private array $metas;
+    private array $meta;
 
     /**
-     * @param array<array-key,MetaInterface> $metas
+     * @var array<array-key, MenuItemInterface>
+     */
+    private array $children = [];
+
+    /**
+     * @param array<array-key,scalar> $meta
      */
     public function __construct(
         string $name,
         string $url,
         string $label = null,
         string $icon = null,
-        array $metas = []
+        array $meta = []
     ) {
         if (null === $label) {
             $label = $name;
@@ -49,12 +53,27 @@ class MenuItem implements MenuItemInterface
         $this->url   = $url;
         $this->label = $label;
         $this->icon  = $icon;
-        $this->metas = $metas;
+        $this->meta  = $meta;
     }
 
-    public function addMeta(MetaInterface $meta): void
+    public function getChildren(): array
     {
-        $this->metas[] = $meta;
+        return $this->children;
+    }
+
+    public function setChildren(array $children): void
+    {
+        $this->children = $children;
+    }
+
+    public function addChildren(MenuItemInterface $child): void
+    {
+        $this->children[] = $child;
+    }
+
+    public function addMeta(string $name, $value): void
+    {
+        $this->meta[$name] = $value;
     }
 
     public function getName(): string
@@ -97,19 +116,8 @@ class MenuItem implements MenuItemInterface
         $this->url = $url;
     }
 
-    /**
-     * @return MetaInterface[]
-     */
-    public function getMetas(): array
+    public function getMeta(): array
     {
-        return $this->metas;
-    }
-
-    /**
-     * @param MetaInterface[] $metas
-     */
-    public function setMetas(array $metas): void
-    {
-        $this->metas = $metas;
+        return $this->meta;
     }
 }
