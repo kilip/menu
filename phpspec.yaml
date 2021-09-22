@@ -1,0 +1,4 @@
+suites:
+  menu:
+    namespace: Doyo\Menu
+    psr4_prefix: Doyo\Menu
