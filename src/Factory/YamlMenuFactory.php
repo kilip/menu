@@ -26,6 +26,6 @@ class YamlMenuFactory extends ArrayMenuFactory
         /** @var array<array-key,array<array-key,string>> $parsed */
         $parsed = Yaml::parse($yaml);
 
-        return $this->create($parsed);
+        return $this->generateMenus($parsed);
     }
 }

@@ -13,17 +13,30 @@ declare(strict_types=1);
 
 namespace Doyo\Menu\Factory;
 
+use Doyo\Menu\Contracts\MenuFactory;
 use Doyo\Menu\Contracts\MenuItemInterface;
 use Doyo\Menu\MenuItem;
 
-class ArrayMenuFactory
+class ArrayMenuFactory implements MenuFactory
 {
     /**
-     * @param array<array-key,array<array-key,string>> $definitions
-     *
-     * @return MenuItemInterface[]
+     * @var class-string
      */
-    public function create(array $definitions): array
+    private string $menuClass;
+
+    /**
+     * @param class-string $menuClass
+     */
+    public function __construct(
+        string $menuClass = MenuItem::class
+    ) {
+        $this->menuClass = $menuClass;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateMenus(array $definitions): array
     {
         $menus  = [];
 
@@ -36,14 +49,17 @@ class ArrayMenuFactory
 
     /**
      * @param array<array-key,string> $item
+     * @psalm-suppress MixedMethodCall
      */
-    private function parseMenuItem(array $item): MenuItemInterface
+    protected function parseMenuItem(array $item): MenuItemInterface
     {
-        $name  = $item['name'];
-        $url   = $item['url'];
-        $icon  = $item['icon'] ?? null;
-        $label = $item['label'] ?? null;
-        $menu  = new MenuItem(
+        $menuClass = $this->menuClass;
+        $name      = $item['name'];
+        $url       = $item['url'];
+        $icon      = $item['icon'] ?? null;
+        $label     = $item['label'] ?? null;
+        /** @var MenuItemInterface $menu */
+        $menu  = new $menuClass(
             $name,
             $url,
             $label,
@@ -67,7 +83,7 @@ class ArrayMenuFactory
     /**
      * @param array<array-key, array<array-key,string>> $children
      */
-    private function parseChildren(MenuItem $menu, array $children): void
+    protected function parseChildren(MenuItemInterface $menu, array $children): void
     {
         foreach ($children as $item) {
             $child = $this->parseMenuItem($item);
@@ -78,7 +94,7 @@ class ArrayMenuFactory
     /**
      * @param array<string,scalar> $meta
      */
-    private function parseMeta(MenuItem $menu, array $meta): void
+    protected function parseMeta(MenuItemInterface $menu, array $meta): void
     {
         foreach ($meta as $name => $value) {
             $menu->addMeta($name, $value);
