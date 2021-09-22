@@ -2,8 +2,24 @@ default:
   suites:
     default:
       contexts:
+        - behatch:context:rest
         - Doyo\Menu\Tests\Behat\Contexts\JsonMenuContext
         - Doyo\Menu\Tests\Behat\Contexts\MenuContext
+      filters:
+        tags: '~@symfony&&~@laravel'
+  extensions:
+    FriendsOfBehat\SymfonyExtension:
+      bootstrap: 'tests/bootstrap.php'
+      kernel:
+        environment: test
+        class: App\Kernel
+    Behat\MinkExtension:
+      base_url: 'http://example.com/'
+      files_path: 'features/files'
+      sessions:
+        default:
+          symfony: ~
+    Behatch\Extension: ~
 
 coverage:
   suites:
@@ -11,4 +27,28 @@ coverage:
       contexts:
         - Doyo\Menu\Tests\Behat\Contexts\JsonMenuContext
         - Doyo\Menu\Tests\Behat\Contexts\MenuContext
+        - Doyo\Menu\Tests\Behat\Contexts\CoverageContext
+
+symfony:
+  suites:
+    default: false
+    symfony: &symfony-suite
+      contexts:
+        - behatch:context:rest
+        - behatch:context:json
+        - Behat\MinkExtension\Context\MinkContext
+        - Doyo\Menu\Tests\Behat\Contexts\UserContext
+      filters:
+        tags: '@symfony'
+
+symfony-coverage:
+  suites:
+    default: false
+    symfony: &symfony-coverage-suite
+      <<: *symfony-suite
+      contexts:
+        - behatch:context:rest
+        - behatch:context:json
+        - Behat\MinkExtension\Context\MinkContext
+        - Doyo\Menu\Tests\Behat\Contexts\UserContext
         - Doyo\Menu\Tests\Behat\Contexts\CoverageContext

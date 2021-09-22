@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Doyo\Menu\Factory;
+namespace Doyo\Menu\Generator;
 
 use Doyo\Menu\Contracts\MenuFactory;
 use Doyo\Menu\Contracts\MenuItemInterface;
@@ -22,7 +22,12 @@ class ArrayMenuFactory implements MenuFactory
     /**
      * @var class-string
      */
-    private string $menuClass;
+    protected string $menuClass;
+
+    /**
+     * @var MenuItemInterface[]
+     */
+    protected array $menus = [];
 
     /**
      * @param class-string $menuClass
@@ -34,24 +39,32 @@ class ArrayMenuFactory implements MenuFactory
     }
 
     /**
-     * {@inheritDoc}
+     * @param array<array-key,array<array-key,string>> $definitions
      */
-    public function generateMenus(array $definitions): array
+    public function generateMenus(array $definitions): void
     {
         $menus  = [];
 
         foreach ($definitions as $item) {
-            $menus[] = $this->parseMenuItem($item);
+            $menu = $this->parseMenuItem($item);
+            if (null !== $menu) {
+                $menus[] = $menu;
+            }
         }
 
-        return $menus;
+        $this->menus = $menus;
+    }
+
+    public function getMenus(): array
+    {
+        return $this->menus;
     }
 
     /**
      * @param array<array-key,string> $item
      * @psalm-suppress MixedMethodCall
      */
-    protected function parseMenuItem(array $item): MenuItemInterface
+    protected function parseMenuItem(array $item): ?MenuItemInterface
     {
         $menuClass = $this->menuClass;
         $name      = $item['name'];
@@ -87,7 +100,9 @@ class ArrayMenuFactory implements MenuFactory
     {
         foreach ($children as $item) {
             $child = $this->parseMenuItem($item);
-            $menu->addChildren($child);
+            if (null !== $child) {
+                $menu->addChildren($child);
+            }
         }
     }
 

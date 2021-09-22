@@ -11,12 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Doyo\Menu\Contracts;
+namespace Doyo\Menu\Bridge\Symfony;
 
-interface MenuFactory
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+class MenuBundle extends Bundle
 {
-    /**
-     * @return MenuItemInterface[]
-     */
-    public function getMenus(): array;
 }

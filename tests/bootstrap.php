@@ -11,12 +11,8 @@
 
 declare(strict_types=1);
 
-namespace Doyo\Menu\Contracts;
+use Symfony\Component\Dotenv\Dotenv;
 
-interface MenuFactory
-{
-    /**
-     * @return MenuItemInterface[]
-     */
-    public function getMenus(): array;
-}
+require __DIR__.'/../vendor/autoload_runtime.php';
+
+(new Dotenv())->bootEnv(__DIR__.'/Symfony/sandbox/.env');
