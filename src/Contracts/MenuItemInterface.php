@@ -25,7 +25,7 @@ interface MenuItemInterface
 
     public function setIcon(string $icon): void;
 
-    public function getIcon(): string;
+    public function getIcon(): ?string;
 
     public function setUrl(string $url): void;
 
