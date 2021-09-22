@@ -34,12 +34,22 @@ interface MenuItemInterface
     /**
      * @return array<array-key, MetaInterface>
      */
-    public function getMetas(): array;
+    public function getMeta(): array;
 
     /**
-     * @param array<array-key, MetaInterface> $metas
+     * @param scalar $value
      */
-    public function setMetas(array $metas): void;
+    public function addMeta(string $name, $value): void;
 
-    public function addMeta(MetaInterface $meta): void;
+    /**
+     * @return array<array-key, MenuItemInterface>
+     */
+    public function getChildren(): array;
+
+    /**
+     * @param array<array-key, MenuItemInterface> $children
+     */
+    public function setChildren(array $children): void;
+
+    public function addChildren(self $child): void;
 }

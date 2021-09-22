@@ -15,17 +15,10 @@ namespace Doyo\Menu\Contracts;
 
 interface MetaInterface
 {
-    public function setName(string $name): void;
-
     public function getName(): string;
 
     /**
-     * @param mixed|string|bool|int $value
-     */
-    public function setValue($value): void;
-
-    /**
-     * @return mixed|string|bool|int
+     * @return string|bool|int|float|scalar
      */
     public function getValue();
 }

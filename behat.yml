@@ -1,0 +1,6 @@
+default:
+  suites:
+    default:
+      contexts:
+        - Doyo\Menu\Tests\Behat\Contexts\JsonMenuContext
+        - Doyo\Menu\Tests\Behat\Contexts\MenuContext

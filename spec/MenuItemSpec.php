@@ -36,4 +36,9 @@ class MenuItemSpec extends ObjectBehavior
     {
         $this->shouldImplement(MenuItemInterface::class);
     }
+
+    public function it_should_set_label_by_name()
+    {
+        $this->getLabel()->shouldReturn('name');
+    }
 }
