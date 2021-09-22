@@ -13,13 +13,27 @@ declare(strict_types=1);
 
 namespace spec\Doyo\Menu;
 
+use Doyo\Menu\Contracts\MenuItemInterface;
 use Doyo\Menu\MenuItem;
 use PhpSpec\ObjectBehavior;
 
 class MenuItemSpec extends ObjectBehavior
 {
+    public function let()
+    {
+        $this->beConstructedWith(
+            'name',
+            '/url'
+        );
+    }
+
     public function it_is_initializable()
     {
         $this->shouldHaveType(MenuItem::class);
+    }
+
+    public function it_should_implement_menu_item_interface()
+    {
+        $this->shouldImplement(MenuItemInterface::class);
     }
 }
