@@ -40,7 +40,8 @@ class MenuContext implements Context
     public function iHaveYamlMenuConfiguration(PyStringNode $string)
     {
         $factory     = new YamlMenuFactory();
-        $this->menus = $factory->fromYaml((string) $string);
+        $factory->fromYaml((string) $string);
+        $this->menus = $factory->getMenus();
     }
 
     /**

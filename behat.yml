@@ -2,7 +2,6 @@ default:
   suites:
     default:
       contexts:
-        - behatch:context:rest
         - Doyo\Menu\Tests\Behat\Contexts\JsonMenuContext
         - Doyo\Menu\Tests\Behat\Contexts\MenuContext
       filters:

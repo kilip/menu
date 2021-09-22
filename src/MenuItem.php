@@ -121,8 +121,15 @@ class MenuItem implements MenuItemInterface
         $this->url = $url;
     }
 
-    public function getMeta(string $name)
+    /**
+     * {@inheritDoc}
+     */
+    public function getMeta(string $name = null)
     {
+        if (null === $name) {
+            return $this->meta;
+        }
+
         return $this->meta[$name];
     }
 }

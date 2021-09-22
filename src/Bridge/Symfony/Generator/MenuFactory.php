@@ -65,7 +65,7 @@ class MenuFactory extends ArrayMenuFactory
         /** @var SplFileInfo $file */
         foreach ($finder->files() as $file) {
             /** @var array<array-key, array<array-key, string>> $yaml */
-            $yaml        = Yaml::parseFile($file->getRealPath());
+            $yaml        = Yaml::parseFile((string) $file->getRealPath());
             $definitions = array_merge($definitions, $yaml);
         }
 
@@ -75,6 +75,7 @@ class MenuFactory extends ArrayMenuFactory
     /**
      * @param array<array-key,string> $item
      * @psalm-suppress MixedMethodCall
+     * @psalm-suppress PossiblyInvalidCast
      */
     protected function parseMenuItem(array $item): ?MenuItemInterface
     {
@@ -83,7 +84,9 @@ class MenuFactory extends ArrayMenuFactory
 
         if (null !== $menu) {
             if ($menu->hasMeta('security')) {
-                $expression = new Expression((string) $menu->getMeta('security'));
+                $expression = $menu->getMeta('security');
+                \assert(\is_string($expression));
+                $expression = new Expression($expression);
                 $granted    = $this->authChecker->isGranted($expression);
             }
         }

@@ -32,9 +32,9 @@ interface MenuItemInterface
     public function getUrl(): string;
 
     /**
-     * @return scalar
+     * @return scalar|array<array-key,scalar>|null
      */
-    public function getMeta(string $name);
+    public function getMeta(string $name=null);
 
     /**
      * @param scalar $value
