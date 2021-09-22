@@ -11,21 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Doyo\Menu\Factory;
+namespace Doyo\Menu\Generator;
 
-use Doyo\Menu\Contracts\MenuItemInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlMenuFactory extends ArrayMenuFactory
 {
-    /**
-     * @return MenuItemInterface[]
-     */
-    public function fromYaml(string $yaml): array
+    public function fromYaml(string $yaml): void
     {
         /** @var array<array-key,array<array-key,string>> $parsed */
         $parsed = Yaml::parse($yaml);
-
-        return $this->generateMenus($parsed);
+        $this->generateMenus($parsed);
     }
 }

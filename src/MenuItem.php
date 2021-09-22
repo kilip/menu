@@ -71,6 +71,11 @@ class MenuItem implements MenuItemInterface
         $this->children[] = $child;
     }
 
+    public function hasMeta(string $name): bool
+    {
+        return \array_key_exists($name, $this->meta);
+    }
+
     public function addMeta(string $name, $value): void
     {
         $this->meta[$name] = $value;
@@ -116,8 +121,15 @@ class MenuItem implements MenuItemInterface
         $this->url = $url;
     }
 
-    public function getMeta(): array
+    /**
+     * {@inheritDoc}
+     */
+    public function getMeta(string $name = null)
     {
-        return $this->meta;
+        if (null === $name) {
+            return $this->meta;
+        }
+
+        return $this->meta[$name];
     }
 }

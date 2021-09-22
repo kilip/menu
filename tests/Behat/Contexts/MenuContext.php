@@ -16,7 +16,7 @@ namespace Doyo\Menu\Tests\Behat\Contexts;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
-use Doyo\Menu\Factory\YamlMenuFactory;
+use Doyo\Menu\Generator\YamlMenuFactory;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -40,7 +40,8 @@ class MenuContext implements Context
     public function iHaveYamlMenuConfiguration(PyStringNode $string)
     {
         $factory     = new YamlMenuFactory();
-        $this->menus = $factory->fromYaml((string) $string);
+        $factory->fromYaml((string) $string);
+        $this->menus = $factory->getMenus();
     }
 
     /**

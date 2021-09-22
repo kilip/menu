@@ -1,0 +1,13 @@
+- name: menu1
+  url: /menu1
+  children:
+    - name: menu11
+      url: /menu11
+    - name: menu12
+      url: /menu12
+      meta:
+        security: is_granted('ROLE_USER')
+    - name: menu13
+      url: /menu13
+      meta:
+        security: is_granted('ROLE_ADMIN')

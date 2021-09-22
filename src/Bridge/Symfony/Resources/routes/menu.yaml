@@ -1,0 +1,5 @@
+doyo_menu:
+  path: /menu
+  methods: ['GET']
+  defaults:
+    _controller: 'doyo.menu.controllers.menu'
