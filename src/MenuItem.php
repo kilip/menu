@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Doyo\Menu;
 
 use Doyo\Menu\Contracts\MenuItemInterface;
-use Doyo\Menu\Contracts\MetaInterface;
-use Exception;
 
 class MenuItem implements MenuItemInterface
 {
@@ -38,14 +36,14 @@ class MenuItem implements MenuItemInterface
     private array $children = [];
 
     /**
-     * @param array<array-key,MetaInterface> $metas
+     * @param array<array-key,scalar> $meta
      */
     public function __construct(
         string $name,
         string $url,
         string $label = null,
         string $icon = null,
-        array $metas = []
+        array $meta = []
     ) {
         if (null === $label) {
             $label = $name;
@@ -55,9 +53,8 @@ class MenuItem implements MenuItemInterface
         $this->url   = $url;
         $this->label = $label;
         $this->icon  = $icon;
-        $this->meta = $metas;
+        $this->meta  = $meta;
     }
-
 
     public function getChildren(): array
     {
@@ -119,19 +116,8 @@ class MenuItem implements MenuItemInterface
         $this->url = $url;
     }
 
-    /**
-     * @return MetaInterface[]
-     */
     public function getMeta(): array
     {
         return $this->meta;
     }
-
-    public function setMeta(array $meta): void
-    {
-        foreach ($meta as $name => $meta) {
-            $this->meta[$name] = $meta;
-        }
-    }
-
 }

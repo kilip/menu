@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Doyo\Menu\Tests\Behat\Contexts;
 
 use Behatch\Context\JsonContext;
-use Behatch\HttpCall\HttpCallResultPool;
 use Behatch\Json\Json;
 use Behatch\Json\JsonInspector;
 

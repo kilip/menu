@@ -32,7 +32,7 @@ interface MenuItemInterface
     public function getUrl(): string;
 
     /**
-     * @return array<array-key, MetaInterface>
+     * @return array<array-key, scalar>
      */
     public function getMeta(): array;
 
