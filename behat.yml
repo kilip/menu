@@ -4,3 +4,11 @@ default:
       contexts:
         - Doyo\Menu\Tests\Behat\Contexts\JsonMenuContext
         - Doyo\Menu\Tests\Behat\Contexts\MenuContext
+
+coverage:
+  suites:
+    default:
+      contexts:
+        - Doyo\Menu\Tests\Behat\Contexts\JsonMenuContext
+        - Doyo\Menu\Tests\Behat\Contexts\MenuContext
+        - Doyo\Menu\Tests\Behat\Contexts\CoverageContext
