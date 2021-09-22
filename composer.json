@@ -33,6 +33,7 @@
         "php": ">=7.4"
     },
     "require-dev": {
+        "friends-of-phpspec/phpspec-code-coverage": "^6.1",
         "friendsofphp/php-cs-fixer": "^3.1",
         "phpspec/phpspec": "^7.1",
         "phpstan/extension-installer": "^1.1",

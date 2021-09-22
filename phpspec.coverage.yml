@@ -1,0 +1,12 @@
+suites:
+  menu:
+    namespace: Doyo\Menu
+    psr4_prefix: Doyo\Menu
+extensions:
+  FriendsOfPhpSpec\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    whitelist:
+      - src
+    format:
+      - clover
+    output:
+      clover: build/logs/phpspec.xml
