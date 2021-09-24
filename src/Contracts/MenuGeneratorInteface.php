@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Doyo\Menu\Contracts;
 
-interface MenuFactory
+interface MenuGeneratorInteface
 {
     /**
-     * @return MenuItemInterface[]
+     * @return MenuInterface[]
      */
     public function getMenus(): array;
 }
