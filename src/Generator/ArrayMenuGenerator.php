@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Doyo\Menu\Generator;
 
-use Doyo\Menu\Contracts\MenuFactory;
-use Doyo\Menu\Contracts\MenuItemInterface;
-use Doyo\Menu\MenuItem;
+use Doyo\Menu\Contracts\MenuGeneratorInteface;
+use Doyo\Menu\Contracts\MenuInterface;
+use Doyo\Menu\Menu;
 
-class ArrayMenuFactory implements MenuFactory
+class ArrayMenuGenerator implements MenuGeneratorInteface
 {
     /**
      * @var class-string
@@ -25,7 +25,7 @@ class ArrayMenuFactory implements MenuFactory
     protected string $menuClass;
 
     /**
-     * @var MenuItemInterface[]
+     * @var MenuInterface[]
      */
     protected array $menus = [];
 
@@ -33,7 +33,7 @@ class ArrayMenuFactory implements MenuFactory
      * @param class-string $menuClass
      */
     public function __construct(
-        string $menuClass = MenuItem::class
+        string $menuClass = Menu::class
     ) {
         $this->menuClass = $menuClass;
     }
@@ -64,14 +64,14 @@ class ArrayMenuFactory implements MenuFactory
      * @param array<array-key,string> $item
      * @psalm-suppress MixedMethodCall
      */
-    protected function parseMenuItem(array $item): ?MenuItemInterface
+    protected function parseMenuItem(array $item): ?MenuInterface
     {
         $menuClass = $this->menuClass;
         $name      = $item['name'];
         $url       = $item['url'];
         $icon      = $item['icon'] ?? null;
         $label     = $item['label'] ?? null;
-        /** @var MenuItemInterface $menu */
+        /** @var MenuInterface $menu */
         $menu  = new $menuClass(
             $name,
             $url,
@@ -84,24 +84,24 @@ class ArrayMenuFactory implements MenuFactory
             $meta = $item['meta'];
             $this->parseMeta($menu, $meta);
         }
-        if (\array_key_exists('children', $item)) {
+        if (\array_key_exists('subMenus', $item)) {
             /** @var array<array-key,array<array-key,string>> $children */
-            $children = $item['children'];
-            $this->parseChildren($menu, $children);
+            $children = $item['subMenus'];
+            $this->parseSubMenus($menu, $children);
         }
 
         return $menu;
     }
 
     /**
-     * @param array<array-key, array<array-key,string>> $children
+     * @param array<array-key, array<array-key,string>> $subMenus
      */
-    protected function parseChildren(MenuItemInterface $menu, array $children): void
+    protected function parseSubMenus(MenuInterface $menu, array $subMenus): void
     {
-        foreach ($children as $item) {
+        foreach ($subMenus as $item) {
             $child = $this->parseMenuItem($item);
             if (null !== $child) {
-                $menu->addChildren($child);
+                $menu->addSubMenu($child);
             }
         }
     }
@@ -109,7 +109,7 @@ class ArrayMenuFactory implements MenuFactory
     /**
      * @param array<string,scalar> $meta
      */
-    protected function parseMeta(MenuItemInterface $menu, array $meta): void
+    protected function parseMeta(MenuInterface $menu, array $meta): void
     {
         foreach ($meta as $name => $value) {
             $menu->addMeta($name, $value);

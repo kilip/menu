@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Doyo\Menu\Bridge\Symfony\Controller;
 
-use Doyo\Menu\Contracts\MenuFactory;
+use Doyo\Menu\Contracts\MenuGeneratorInteface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class MenuController
 {
-    public function __invoke(MenuFactory $menuFactory, SerializerInterface $serializer): Response
+    public function __invoke(MenuGeneratorInteface $menuFactory, SerializerInterface $serializer): Response
     {
         $menus = $menuFactory->getMenus();
         $json  = $serializer->serialize($menus, 'json');

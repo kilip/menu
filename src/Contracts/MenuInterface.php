@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Doyo\Menu\Contracts;
 
-interface MenuItemInterface
+use Doctrine\Common\Collections\Collection;
+
+interface MenuInterface
 {
     public function setName(string $name): void;
 
@@ -37,21 +39,24 @@ interface MenuItemInterface
     public function getMeta(string $name=null);
 
     /**
+     * @param array<array-key,scalar> $meta
+     */
+    public function setMeta(array $meta): void;
+
+    /**
      * @param scalar $value
      */
     public function addMeta(string $name, $value): void;
 
     public function hasMeta(string $name): bool;
 
-    /**
-     * @return array<array-key, MenuItemInterface>
-     */
-    public function getChildren(): array;
+    public function getSubMenus(): Collection;
 
-    /**
-     * @param array<array-key, MenuItemInterface> $children
-     */
-    public function setChildren(array $children): void;
+    public function setSubMenus(Collection $subMenus): void;
 
-    public function addChildren(self $child): void;
+    public function addSubMenu(self $subMenu): void;
+
+    public function removeSubMenu(self $subMenu): void;
+
+    public function hasSubMenu(self $subMenu): bool;
 }

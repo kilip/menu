@@ -7,9 +7,9 @@
         <service id="doyo.menu.controllers.menu" class="Doyo\Menu\Bridge\Symfony\Controller\MenuController">
             <tag name="controller.service_arguments"/>
         </service>
-        <service id="doyo.menu.factory.yaml" class="Doyo\Menu\Bridge\Symfony\Generator\MenuFactory">
+        <service id="doyo.menu.factory.yaml" class="Doyo\Menu\Bridge\Symfony\Generator\MenuGenerator">
             <argument key="$configDir">%doyo.menu.menu_config_dir%</argument>
         </service>
-        <service alias="doyo.menu.factory.yaml" id="Doyo\Menu\Contracts\MenuFactory"/>
+        <service alias="doyo.menu.factory.yaml" id="Doyo\Menu\Contracts\MenuGeneratorInteface"/>
     </services>
 </container>

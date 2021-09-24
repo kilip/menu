@@ -1,0 +1,4 @@
+- name: foo
+  url: /foo
+  meta:
+    security: is_granted('ROLE_USER')

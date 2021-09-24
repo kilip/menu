@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Doyo\Menu;
 
-use Doyo\Menu\Contracts\MenuItemInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doyo\Menu\Contracts\MenuInterface;
 
-class MenuItem implements MenuItemInterface
+class Menu implements MenuInterface
 {
     private string $name;
 
@@ -31,9 +33,10 @@ class MenuItem implements MenuItemInterface
     private array $meta;
 
     /**
-     * @var array<array-key, MenuItemInterface>
+     * @var Collection|ArrayCollection
+     * @psalm-var
      */
-    private array $children = [];
+    private Collection $subMenus;
 
     /**
      * @param array<array-key,scalar> $meta
@@ -49,26 +52,46 @@ class MenuItem implements MenuItemInterface
             $label = $name;
         }
 
-        $this->name  = $name;
-        $this->url   = $url;
-        $this->label = $label;
-        $this->icon  = $icon;
-        $this->meta  = $meta;
+        $this->name     = $name;
+        $this->url      = $url;
+        $this->label    = $label;
+        $this->icon     = $icon;
+        $this->meta     = $meta;
+        $this->subMenus = new ArrayCollection();
     }
 
-    public function getChildren(): array
+    public function hasSubMenu(MenuInterface $subMenu): bool
     {
-        return $this->children;
+        return $this->subMenus->contains($subMenu);
     }
 
-    public function setChildren(array $children): void
+    public function removeSubMenu(MenuInterface $subMenu): void
     {
-        $this->children = $children;
+        if ($this->hasSubMenu($subMenu)) {
+            $this->subMenus->removeElement($subMenu);
+        }
     }
 
-    public function addChildren(MenuItemInterface $child): void
+    public function getSubMenus(): Collection
     {
-        $this->children[] = $child;
+        return $this->subMenus;
+    }
+
+    public function setSubMenus(Collection $subMenus): void
+    {
+        $this->subMenus = $subMenus;
+    }
+
+    public function addSubMenu(MenuInterface $subMenu): void
+    {
+        if (false === $this->hasSubMenu($subMenu)) {
+            $this->subMenus->add($subMenu);
+        }
+    }
+
+    public function setMeta(array $meta): void
+    {
+        $this->meta = $meta;
     }
 
     public function hasMeta(string $name): bool

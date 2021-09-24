@@ -14,31 +14,41 @@ declare(strict_types=1);
 namespace Doyo\Menu\Bridge\Symfony\Generator;
 
 use Doyo\Menu\Bridge\Symfony\Exception\MenuException;
-use Doyo\Menu\Contracts\MenuItemInterface;
-use Doyo\Menu\Generator\ArrayMenuFactory;
-use Doyo\Menu\MenuItem;
+use Doyo\Menu\Contracts\MenuInterface;
+use Doyo\Menu\Generator\ArrayMenuGenerator;
+use Doyo\Menu\Menu;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Yaml\Yaml;
 
-class MenuFactory extends ArrayMenuFactory
+class MenuGenerator extends ArrayMenuGenerator
 {
     private string $configDir;
     private AuthorizationCheckerInterface $authChecker;
+    private AdapterInterface $cacheAdapter;
 
+    /**
+     * @param class-string $menuClass
+     *
+     * @throws MenuException
+     */
     public function __construct(
+        AuthorizationCheckerInterface $authChecker,
+        AdapterInterface $adapter,
         string $configDir,
-        AuthorizationCheckerInterface $authChecker
+        string $menuClass = Menu::class
     ) {
-        parent::__construct(MenuItem::class);
+        parent::__construct($menuClass);
 
         if ( ! is_dir($configDir)) {
             throw MenuException::configDirNotExists($configDir);
         }
-        $this->configDir   = $configDir;
-        $this->authChecker = $authChecker;
+        $this->configDir    = $configDir;
+        $this->authChecker  = $authChecker;
+        $this->cacheAdapter = $adapter;
     }
 
     public function getMenus(): array
@@ -47,7 +57,7 @@ class MenuFactory extends ArrayMenuFactory
             $this->parseYamls();
         }
 
-        return $this->menus;
+        return $this->secureMenus();
     }
 
     /**
@@ -62,6 +72,7 @@ class MenuFactory extends ArrayMenuFactory
             ->sortByName();
 
         $definitions = [];
+
         /** @var SplFileInfo $file */
         foreach ($finder->files() as $file) {
             /** @var array<array-key, array<array-key, string>> $yaml */
@@ -73,24 +84,45 @@ class MenuFactory extends ArrayMenuFactory
     }
 
     /**
-     * @param array<array-key,string> $item
-     * @psalm-suppress MixedMethodCall
-     * @psalm-suppress PossiblyInvalidCast
+     * @return MenuInterface[]
      */
-    protected function parseMenuItem(array $item): ?MenuItemInterface
+    private function secureMenus(): array
     {
-        $menu    = parent::parseMenuItem($item);
-        $granted = true;
-
-        if (null !== $menu) {
-            if ($menu->hasMeta('security')) {
-                $expression = $menu->getMeta('security');
-                \assert(\is_string($expression));
-                $expression = new Expression($expression);
-                $granted    = $this->authChecker->isGranted($expression);
+        $menus = [];
+        foreach ($this->menus as $menu) {
+            if ($this->isGranted($menu)) {
+                $this->secureSubMenus($menu);
+                $menus[] = $menu;
             }
         }
 
-        return $granted ? $menu : null;
+        return $menus;
+    }
+
+    /**
+     * @psalm-suppress MixedAssignment
+     */
+    private function secureSubMenus(MenuInterface $menu): void
+    {
+        foreach ($menu->getSubMenus() as $subMenu) {
+            /** @var MenuInterface $subMenu */
+            if (false === $this->isGranted($subMenu)) {
+                $menu->removeSubMenu($subMenu);
+            }
+            $this->secureSubMenus($subMenu);
+        }
+    }
+
+    private function isGranted(MenuInterface $menu): bool
+    {
+        if ($menu->hasMeta('security')) {
+            $expression = $menu->getMeta('security');
+            \assert(\is_string($expression));
+            $expression = new Expression($expression);
+
+            return $this->authChecker->isGranted($expression);
+        }
+
+        return true;
     }
 }

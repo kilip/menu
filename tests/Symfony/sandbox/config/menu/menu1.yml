@@ -1,6 +1,6 @@
 - name: menu1
   url: /menu1
-  children:
+  subMenus:
     - name: menu11
       url: /menu11
     - name: menu12

@@ -15,7 +15,7 @@ namespace Doyo\Menu\Generator;
 
 use Symfony\Component\Yaml\Yaml;
 
-class YamlMenuFactory extends ArrayMenuFactory
+class YamlMenuFactory extends ArrayMenuGenerator
 {
     public function fromYaml(string $yaml): void
     {

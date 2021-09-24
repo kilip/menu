@@ -1,5 +1,5 @@
 - name: menu2
   url: /menu2
-  children:
+  subMenus:
     - name: menu21
       url: /menu21

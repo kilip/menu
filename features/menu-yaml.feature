@@ -9,14 +9,14 @@ Feature: YAML Menu Config
       meta:
         foo: bar
         hello: world
-      children:
+      subMenus:
         - name: child1
           icon: child1
           url: /child1
           meta:
             foo: bar
             hello: world
-          children:
+          subMenus:
             - name: child11
               icon: child11
               url: /child11
@@ -43,19 +43,19 @@ Feature: YAML Menu Config
 
   Scenario: Checking child menu level 1
     When I serialize menu to json
-    Then the JSON node "root[0].children[0].name" should be equal to "child1"
-    And the JSON node "root[0].children[0].icon" should be equal to "child1"
-    And the JSON node "root[0].children[0].label" should be equal to "child1"
-    And the JSON node "root[0].children[0].url" should be equal to "/child1"
-    And the JSON node "root[0].children[0].meta.foo" should be equal to "bar"
-    And the JSON node "root[0].children[0].meta.hello" should be equal to "world"
+    Then the JSON node "root[0].subMenus[0].name" should be equal to "child1"
+    And the JSON node "root[0].subMenus[0].icon" should be equal to "child1"
+    And the JSON node "root[0].subMenus[0].label" should be equal to "child1"
+    And the JSON node "root[0].subMenus[0].url" should be equal to "/child1"
+    And the JSON node "root[0].subMenus[0].meta.foo" should be equal to "bar"
+    And the JSON node "root[0].subMenus[0].meta.hello" should be equal to "world"
 
   Scenario: Checking child menu level 2
     When I serialize menu to json
-    Then the JSON node "root[0].children[0].children[0].name" should be equal to "child11"
-    And the JSON node "root[0].children[0].children[0].label" should be equal to "child11"
-    And the JSON node "root[0].children[0].children[0].icon" should be equal to "child11"
-    And the JSON node "root[0].children[0].children[0].url" should be equal to "/child11"
-    And the JSON node "root[0].children[0].children[0].meta.foo" should be equal to "bar"
-    And the JSON node "root[0].children[0].children[0].meta.hello" should be equal to "world"
+    Then the JSON node "root[0].subMenus[0].subMenus[0].name" should be equal to "child11"
+    And the JSON node "root[0].subMenus[0].subMenus[0].label" should be equal to "child11"
+    And the JSON node "root[0].subMenus[0].subMenus[0].icon" should be equal to "child11"
+    And the JSON node "root[0].subMenus[0].subMenus[0].url" should be equal to "/child11"
+    And the JSON node "root[0].subMenus[0].subMenus[0].meta.foo" should be equal to "bar"
+    And the JSON node "root[0].subMenus[0].subMenus[0].meta.hello" should be equal to "world"
 
